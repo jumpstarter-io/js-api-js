@@ -3,7 +3,7 @@ var env = require("./env"),
 
 var validateSession = function(tokenString) {
 	if (env.env()) {
-		return auth.JSTokenAuth(env.env().ident.instance.sess, tokenString);
+		return auth.JSTokenAuth(tokenString, env.env().ident.instance.sess);
 	} else {
 		throw ("jumpstarter not initalized");
 	}
