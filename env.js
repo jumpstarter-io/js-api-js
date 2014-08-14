@@ -72,15 +72,6 @@ var settings = function() {
 	}
 }
 
-var validateSession = function(tokenString) {
-	if (appEnv) {
-		return auth.JSTokenAuth(appEnv.ident.instance.sess, tokenString);
-	} else {
-		throw ("jumpstarter not initalized");
-	}
-
-};
-
 module.exports.init = init;
 module.exports.env = env;
 module.exports.settings = settings;
