@@ -75,4 +75,3 @@ var settings = function() {
 module.exports.init = init;
 module.exports.env = env;
 module.exports.settings = settings;
-module.exports.validateSession = validateSession;
