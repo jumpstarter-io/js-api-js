@@ -49,13 +49,6 @@ var init = function(alt_env_json) {
 	appSettings = parseSettings(appEnv);
 }
 
-if (!module.parent) {
-    (function() {
-	var testValues = getTestValues();
-	console.log(exports.JSTokenAuth(testValues.tokenString, testValues.sessionSecret));
-    })();
-}
-
 var env = function() {
 	if (appEnv) {
 		return appEnv;

@@ -41,7 +41,7 @@ var parseToken = function (token) {
 
 var verifyToken = function (tokenObj, x) {
     var now = new Date(),
-        tokenExpiry = ntohl(hexStrToIntBuffer(tokenObj.eTime), 0);
+        tokenExpiry = ntohl(hexStrToIntBuffer(tokenObj.eTime.substring(8)), 0);
     if ((new Date(tokenExpiry * 1000)) > now) {
 		var eRaw = hexStrToIntBuffer(tokenObj.eTime).toString("binary"),
 	        yRaw = hexStrToIntBuffer(tokenObj.y).toString("binary"),
