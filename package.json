@@ -1,22 +1,22 @@
 {
-  "name": "jumpstarterapi",
-  "version": "0.0.15",
-  "description": "Jumpstarter integration for node",
-  "url": "http://jumpstarter.io",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jumpstarter-io/js-api-js.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Caj Larsson <caj@jumpstarter.io>",
-  "contributors": ["Stefan Nyman <stefan@jumpstarter.io>"],
-  "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {},
-  "optionalDependencies": {},
-  "engines": {
-    "node": "*"
-  }
+    "name": "jumpstarterapi",
+    "version": "0.0.16",
+    "description": "Jumpstarter integration for node",
+    "url": "http://jumpstarter.io",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/jumpstarter-io/js-api-js.git"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Caj Larsson <caj@jumpstarter.io>",
+    "contributors": ["Stefan Nyman <stefan@jumpstarter.io>"],
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {},
+    "optionalDependencies": {},
+    "engines": {
+        "node": "*"
+    }
 }
