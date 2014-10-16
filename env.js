@@ -1,17 +1,14 @@
 "use strict";
 
 var auth = require("./auth"),
-        fs = require("fs");
+    fs = require("fs");
 
 var appEnv = false;
 var appSettings = false;
 
 var loadJSONSync = function (path) {
-    console.log(path);
     var buf = fs.readFileSync(path, "utf8");
-    console.log(buf);
     var obj = JSON.parse(buf);
-    console.log(obj);
     return obj;
 };
 
@@ -19,8 +16,7 @@ var parseSettings = function (obj) {
     var appSettings = {};
     try {
         appSettings = obj.settings[obj.ident.app.id];
-    } catch (e) {
-    }
+    } catch (e) {}
     var settings = obj.settings.assembly;
     // Overwrite settings with the more specific appsettings.
     for (var key in appSettings) {

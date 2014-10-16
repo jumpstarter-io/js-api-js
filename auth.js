@@ -19,9 +19,8 @@ var ntohl = function (b, i) {
 
 var hexStrToIntBuffer = function (hexStr) {
     var buf = new Buffer(hexStr.length / 2),
-            off = 0,
-            bOff = 0,
-            i = 0;
+        bOff = 0,
+        i = 0;
     for (i = 0; i < hexStr.length; i += 2) {
         buf.writeUInt8(parseInt(hexStr.substring(i, i + 2), 16), bOff++);
     }
@@ -41,21 +40,20 @@ var parseToken = function (token) {
 
 var verifyToken = function (tokenObj, x) {
     var now = new Date(),
-            tokenExpiry = ntohl(hexStrToIntBuffer(tokenObj.eTime.substring(8)), 0);
-    if ((new Date(tokenExpiry * 1000)) > now) {
-        var eRaw = hexStrToIntBuffer(tokenObj.eTime).toString("binary"),
-                yRaw = hexStrToIntBuffer(tokenObj.y).toString("binary"),
-                xRaw = hexStrToIntBuffer(x).toString("binary"),
-                shasum = Crypto.createHash("sha256");
-        shasum.update(Util.format("%s%s%s", eRaw, yRaw, xRaw));
-        return shasum.digest("hex") === tokenObj.h;
-    }
-    return false;
+        tokenExpiry = ntohl(hexStrToIntBuffer(tokenObj.eTime.substring(8)), 0);
+    if ((new Date(tokenExpiry * 1000)) < now)
+        return false;
+    var eRaw = hexStrToIntBuffer(tokenObj.eTime).toString("binary"),
+        yRaw = hexStrToIntBuffer(tokenObj.y).toString("binary"),
+        xRaw = hexStrToIntBuffer(x).toString("binary"),
+        shasum = Crypto.createHash("sha256");
+    shasum.update(Util.format("%s%s%s", eRaw, yRaw, xRaw));
+    return shasum.digest("hex") === tokenObj.h;
 };
 
 exports.validateSession = function (tokenString) {
     var sessionSecret = env.env().ident.container.session_key,
-            tokenObj = parseToken(tokenString);
+        tokenObj = parseToken(tokenString);
     if (!tokenObj || !sessionSecret) {
         throw("Invalid Auth Token");
     }
