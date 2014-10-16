@@ -1,14 +1,6 @@
 "use strict";
 var Crypto = require("crypto"),
-    Util = require("util"),
-    env = require("./env");
-
-var getTestValues = function () {
-    return {
-        tokenString: "0000000053e8d466936d3f9478f731b5315d2a93ff36994ca99a517134e10835cecf710eab58965c80e82a9402cbaba14f2b63ddc6f7601384d110f420df0ae8f828dcd366ebf931",
-        sessionSecret: "c1b3447173eeee38a75c489a81d3e1a935cd26e1507c9a9015f131d9c80fba13"
-    };
-};
+    Util = require("util");
 
 var ntohl = function (b, i) {
     return ((0xff & b[i]) << 24) |
@@ -51,11 +43,11 @@ var verifyToken = function (tokenObj, x) {
     return shasum.digest("hex") === tokenObj.h;
 };
 
-exports.validateSession = function (tokenString) {
-    var sessionSecret = env.env().ident.container.session_key,
+exports.validateSession = function (env, tokenString) {
+    var sessionKey = env.container().session_key,
         tokenObj = parseToken(tokenString);
-    if (!tokenObj || !sessionSecret) {
+    if (!tokenObj || !sessionKey) {
         throw("Invalid Auth Token");
     }
-    return verifyToken(tokenObj, sessionSecret);
+    return verifyToken(tokenObj, sessionKey);
 };

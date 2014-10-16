@@ -1,69 +1,46 @@
 "use strict";
 
-var auth = require("./auth"),
-    fs = require("fs");
+var fs = require("fs");
 
-var appEnv = false;
-var appSettings = false;
-
-var loadJSONSync = function (path) {
-    var buf = fs.readFileSync(path, "utf8");
-    var obj = JSON.parse(buf);
-    return obj;
-};
-
-var parseSettings = function (obj) {
-    var appSettings = {};
-    try {
-        appSettings = obj.settings[obj.ident.app.id];
-    } catch (e) {}
-    var settings = obj.settings.assembly;
-    // Overwrite settings with the more specific appsettings.
-    for (var key in appSettings) {
-        settings[key] = appSettings[key];
-    }
-    return settings;
-};
-
-var parseAppEnv = function (alt_env_json) {
-    var envObj;
-    try {
-        envObj = loadJSONSync("/app/env.json");
-    } catch (e) {
-    }
-    if (!envObj) {
-        try {
-            envObj = loadJSONSync(alt_env_json);
-        } catch (e) {
+module.exports = function() {
+    var cloneObj = function(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    };
+    var JSEnv = function() {
+        var envStr = fs.readFileSync("/app/env.json", "utf8");
+        this.env = JSON.parse(envStr);
+    };
+    JSEnv.prototype.ident = function() {
+        return cloneObj(this.env.ident);
+    };
+    JSEnv.prototype.user = function() {
+        return cloneObj(this.env.ident.user);
+    };
+    JSEnv.prototype.container = function() {
+        return cloneObj(this.env.ident.container);
+    };
+    JSEnv.prototype.app = function() {
+        return cloneObj(this.env.ident.app || {});
+    };
+    JSEnv.prototype.coreSettings = function() {
+        return cloneObj(this.env.settings.core);
+    };
+    JSEnv.prototype.appSettings = function() {
+        return cloneObj(this.env.settings.app || {});
+    };
+    JSEnv.prototype.find = function(path) {
+        var keys = path.split(".");
+        if (keys.length === 0)
+            return null;
+        var obj = cloneObj(this.env);
+        for (var i = 0; i < keys.length; i++) {
+            if (Object.keys(obj).indexOf(keys[i]) > -1) {
+                obj = obj[keys[i]];
+            } else {
+                return null;
+            }
         }
-    }
-    if (!envObj) {
-        throw("no valid env.json available");
-    }
-    return envObj;
-};
-
-var init = function (alt_env_json) {
-    appEnv = parseAppEnv(alt_env_json);
-    appSettings = parseSettings(appEnv);
-};
-
-var env = function () {
-    if (appEnv) {
-        return appEnv;
-    } else {
-        throw ("jumpstarter not initalized");
-    }
-};
-
-var settings = function () {
-    if (appSettings) {
-        return appSettings;
-    } else {
-        throw ("jumpstarter not initalized");
-    }
-};
-
-module.exports.init = init;
-module.exports.env = env;
-module.exports.settings = settings;
+        return obj;
+    };
+    return new JSEnv();
+}();
