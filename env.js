@@ -3,12 +3,17 @@
 var fs = require("fs");
 
 module.exports = function() {
+    var env = null;
     var cloneObj = function(obj) {
         return JSON.parse(JSON.stringify(obj));
     };
     var JSEnv = function() {
-        var envStr = fs.readFileSync("/app/env.json", "utf8");
-        this.env = JSON.parse(envStr);
+        if (env === null) {
+            var envStr = fs.readFileSync("/app/env.json", "utf8");
+            env = JSON.parse(envStr);
+        }
+        this.env = env;
+        return this;
     };
     JSEnv.prototype.ident = function() {
         return cloneObj(this.env.ident);
