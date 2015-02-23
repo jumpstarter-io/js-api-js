@@ -19,6 +19,14 @@ var hexStrToIntBuffer = function (hexStr) {
     return buf;
 };
 
+var hexStrToBinaryStr = function(hexStr) {
+    var out = "";
+    for (var i = 0; i < hexStr.length; i += 2) {
+        out += String.fromCharCode(parseInt(hexStr.substring(i, i + 2), 16));
+    }
+    return out;
+};
+
 var parseToken = function (token) {
     if (token.length !== 144 || !/^[0-9a-fA-F]+$/.test(token)) {
         throw("Invalid Auth Token");
@@ -35,9 +43,9 @@ var verifyToken = function (tokenObj, x) {
         tokenExpiry = ntohl(hexStrToIntBuffer(tokenObj.eTime.substring(8)), 0);
     if ((new Date(tokenExpiry * 1000)) < now)
         return false;
-    var eRaw = hexStrToIntBuffer(tokenObj.eTime).toString("binary"),
-        yRaw = hexStrToIntBuffer(tokenObj.y).toString("binary"),
-        xRaw = hexStrToIntBuffer(x).toString("binary"),
+    var eRaw = hexStrToBinaryStr(tokenObj.eTime),
+        yRaw = hexStrToBinaryStr(tokenObj.y),
+        xRaw = hexStrToBinaryStr(x),
         shasum = Crypto.createHash("sha256");
     shasum.update(Util.format("%s%s%s", eRaw, yRaw, xRaw));
     return shasum.digest("hex") === tokenObj.h;
