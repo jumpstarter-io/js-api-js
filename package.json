@@ -1,6 +1,6 @@
 {
     "name": "jumpstarterapi",
-    "version": "1",
+    "version": "1.0.0",
     "description": "Jumpstarter integration for node",
     "url": "http://jumpstarter.io",
     "repository": {
