@@ -1,6 +1,7 @@
 "use strict";
 
-var fs = require("fs");
+var fs = require("fs"),
+    util = require("util");
 
 module.exports = function() {
     var env = null;
@@ -46,6 +47,26 @@ module.exports = function() {
             }
         }
         return obj;
+    };
+    JSEnv.prototype.getSiteURL = function() {
+        var coreSettings = this.coreSettings(),
+            userDomains = coreSettings["user-domains"],
+            autoDomain = coreSettings["auto-domain"];
+        if (Array.isArray(userDomains) && userDomains.length > 0) {
+            var preferred = userDomains[0];
+            for (var i = 0; i < userDomains.length; i++) {
+                if (userDomains[i]["preferred"]) {
+                    preferred = userDomains[i];
+                    break;
+                }
+            }
+            if (!preferred["name"] || preferred["name"] === "")
+                throw("corrupt env: preferred domain has no name");
+            return util.format("%s://%s", (preferred["secure"]? "https": "http"), preferred["name"]);
+        }
+        if (!autoDomain || autoDomain.length === 0)
+            throw("auto-domain not found in env");
+        return util.format("https://%s", autoDomain);
     };
     return new JSEnv();
 }();
